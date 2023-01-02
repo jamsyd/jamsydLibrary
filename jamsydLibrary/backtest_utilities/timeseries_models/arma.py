@@ -1,13 +1,13 @@
 import os
 import sys
 
-from datetime import datetime
 import numpy as np
 import pandas as pd
 
+from datetime import datetime
 from statsmodels.tsa.arima_model import ARMA
 
-class train_arma():
+class train_arma:
     
     def __init__(self, event):
 
@@ -19,6 +19,7 @@ class train_arma():
         self.trainDFLength   = event['trainDFLength']
         self.order           = event['order']
         self.log_diff        = event['log_diff']
+        self.product         = event['product']
 
         # number of mdoels to be trained
         self.num_models      = event['num_models']
@@ -91,7 +92,6 @@ class train_arma():
                     cacheMetadata['aic'].append(res.aic)
                     cacheMetadata['bic'].append(res.bic)
                     cacheMetadata['hqic'].append(res.hqic)
-                    # cacheMetadata['bse'].append(res.bse)
                     cacheMetadata['mae'].append(np.mean(np.abs(res.resid)))
                     cacheMetadata['mse'].append(np.mean(np.square(res.resid)))
                     cacheMetadata['rsquare'].append(np.mean(np.square(res.resid))/np.var(np.exp(log_diff[i:self.trainDFLength+i])))
@@ -154,12 +154,10 @@ class train_arma():
                     cacheForecasts['pointForecast'].append(fcast[0]*self.dataframe['close'][self.trainDFLength+i])
 
                     # store model metadata
-                    # store model metadata
                     cacheMetadata['asofdate'].append(self.dataframe.index[i])
                     cacheMetadata['aic'].append(res.aic)
                     cacheMetadata['bic'].append(res.bic)
                     cacheMetadata['hqic'].append(res.hqic)
-                    # cacheMetadata['bse'].append(res.bse)
                     cacheMetadata['mae'].append(np.mean(np.abs(res.resid)))
                     cacheMetadata['mse'].append(np.mean(np.square(res.resid)))
                     cacheMetadata['rsquare'].append(np.mean(np.square(res.resid))/np.var(np.exp(log_diff[i:self.trainDFLength+i])))
@@ -187,44 +185,28 @@ class train_arma():
 
             # Fixing data formats
             cacheForecasts['pointForecast'] = np.concatenate(cacheForecasts['pointForecast'])
-            cacheForecasts['asofdate']      = np.array(self.dataframe['close'][self.trainDFLength+self.forecastHorizon:\
+            cacheForecasts['asofdate']      = np.array(self.dataframe['close'][1+self.trainDFLength+self.forecastHorizon:\
                                                     self.trainDFLength+self.forecastHorizon+\
-                                                    len(cacheForecasts['pointForecast'])].index)
-            cacheForecasts['close']         = np.array(self.dataframe['close'][self.trainDFLength+self.forecastHorizon:\
-                                                    self.trainDFLength+self.forecastHorizon+len(cacheForecasts['pointForecast'])])
+                                                    len(cacheForecasts['pointForecast'])+1].index)
+            cacheForecasts['close']         = np.array(self.dataframe['close'][1+self.trainDFLength+self.forecastHorizon:\
+                                                    self.trainDFLength + self.forecastHorizon+len(cacheForecasts['pointForecast'])+1])
             cacheForecasts['forecastday']   = np.concatenate(cacheForecasts['forecastday'])
 
-            pd.DataFrame(cacheForecasts).to_csv('forecasts.csv')
-            pd.DataFrame(cacheMetadata).to_csv('metadata.csv')
+            pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}.csv')
+            pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}.csv')
 
+arma_model_event = {
 
-class model_analysis(train_arma):
-
-    def __init__(self,train_arma):
-        self.model = train_arma
-
-    def forecast_error(self):
-
-        cacheForecastError = {
-
-            'asofdate':self.model.asofdate,
-            'forecastError':self.model.close - self.model.pointForecast,
-
-        }
-
-        return pd.DataFrame(cacheForecastError)
-
-model_event = {
-
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\Corn\Data\CBOT_DL_ZC1!, 1D.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\orange_juice\ICEUS_DLY_OJ1!, 1D.csv',
     'forecastHorizon':5,
     'trainDFLength':252,
     'order':(2,2),
     'num_models':12000,
     'log_diff':True,
+    'product':'orange_juice',
 
 }
 
-model = train_arma(model_event)
+model = train_arma(arma_model_event)
 
 model.arma_model()

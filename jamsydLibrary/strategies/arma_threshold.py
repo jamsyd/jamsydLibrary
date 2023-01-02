@@ -16,16 +16,16 @@ def spread_threshold(pnl_event):
     close_diff    = pnl_event['dataframe']['close'].diff(pnl_event['forecastHorizon'])
     forecast_diff = pnl_event['dataframe']['pointForecast'].diff(pnl_event['forecastHorizon'])
 
-    i = pnl_event['forecastHorizon']
-    while i < len(pnl_event['dataframe']):
+    i = 0
+    while i < len(pnl_event['dataframe']) - pnl_event['forecastHorizon']:
 
         if np.abs(forecast_diff[i]) > pnl_event['threshold']:
 
-            if forecast_diff[i] > 0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] >= 0:
                 for j in range(0,pnl_event['forecastHorizon']):
                     cachePnL['pnl'].append(close_diff[i + j - pnl_event['forecastHorizon']])
 
-            if forecast_diff[i] < 0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] < 0:
                 for j in range(0,pnl_event['forecastHorizon']):
                     cachePnL['pnl'].append(-close_diff[i + j - pnl_event['forecastHorizon']])
 
@@ -37,14 +37,17 @@ def spread_threshold(pnl_event):
 
     cachePnL['asofdate'] = pnl_event['dataframe']['asofdate'][pnl_event['forecastHorizon']:].to_list()
 
+    print(len(cachePnL['pnl']))
+    print(len(cachePnL['asofdate']))
+
     pd.DataFrame(cachePnL).to_csv('pnl.csv')
 
 
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts.csv',
-    'threshold':1,
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\orange_juice\forecasts.csv',
+    'threshold':0.05,
     'reinvest':True,
 }
 
