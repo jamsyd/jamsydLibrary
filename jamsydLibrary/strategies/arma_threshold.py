@@ -21,11 +21,11 @@ def spread_threshold(pnl_event):
 
         if np.abs(forecast_diff[i]) > pnl_event['threshold']:
 
-            if forecast_diff[i+pnl_event['forecastHorizon']] >= 0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] > 0:
                 for j in range(0,pnl_event['forecastHorizon']):
                     cachePnL['pnl'].append(close_diff[i + j - pnl_event['forecastHorizon']])
 
-            if forecast_diff[i+pnl_event['forecastHorizon']] < 0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] <= 0:
                 for j in range(0,pnl_event['forecastHorizon']):
                     cachePnL['pnl'].append(-close_diff[i + j - pnl_event['forecastHorizon']])
 
@@ -40,14 +40,14 @@ def spread_threshold(pnl_event):
     print(len(cachePnL['pnl']))
     print(len(cachePnL['asofdate']))
 
-    pd.DataFrame(cachePnL).to_csv('pnl.csv')
+    pd.DataFrame(cachePnL).to_csv(r'Output\arma\crypto\chainlink\pnl.csv')
 
 
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\orange_juice\forecasts.csv',
-    'threshold':0.05,
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\crypto\chainlink\forecasts_chainlink_(2, 2)_True_5.csv',
+    'threshold':0.1,
     'reinvest':True,
 }
 
