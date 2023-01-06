@@ -40,14 +40,14 @@ def spread_threshold(pnl_event):
     print(len(cachePnL['pnl']))
     print(len(cachePnL['asofdate']))
 
-    pd.DataFrame(cachePnL).to_csv(r'Output\arma\crypto\chainlink\pnl.csv')
+    pd.DataFrame(cachePnL).to_csv(r'pnl.csv')
 
 
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\crypto\chainlink\forecasts_chainlink_(2, 2)_True_5.csv',
-    'threshold':0.1,
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\commodities\corn\forecasts_corn_(1, 0)_True_5.csv',
+    'threshold':0.01,
     'reinvest':True,
 }
 

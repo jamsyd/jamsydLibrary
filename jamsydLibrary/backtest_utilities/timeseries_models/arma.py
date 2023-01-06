@@ -21,6 +21,7 @@ class train_arma:
         self.diff            = event['diff']
         self.product         = event['product']
         self.column          = event['column']
+        self.b_adjust        = event['b_adjust']
 
         # number of mdoels to be trained
         self.num_models      = event['num_models']
@@ -196,20 +197,24 @@ class train_arma:
             cacheForecasts[self.column]     = np.array(self.dataframe[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])])
             cacheForecasts['asofdate']      = np.array(self.dataframe[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])].index)
 
-            pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')
-            pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')
-
+            if self.b_adjust:
+                pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}_{self.b_adjust}.csv')
+                pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}_{self.b_adjust}.csv')
+            else:
+                pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')
+                pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')           
 
 arma_model_event = {
 
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\crypto\chainlink\COINBASE_LINKUSD, 1D.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\commodities\corn\CBOT_DL_ZC1!, 1D b_adjust.csv',
     'forecastHorizon':5,
     'trainDFLength':252,
-    'order':(2,2),
-    'num_models':1000,
+    'order':(1,0),
+    'num_models':5000,
     'diff':True,
-    'product':'chainlink',
-    'column':'close'
+    'product':'corn',
+    'column':'close',
+    'b_adjust':True,
 
 }
 
