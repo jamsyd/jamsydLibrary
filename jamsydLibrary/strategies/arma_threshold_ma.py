@@ -8,6 +8,7 @@ def spread_threshold(pnl_event):
 
         'asofdate':[],
         'pnl':[],
+        'strategy':[],
 
     }
 
@@ -19,13 +20,13 @@ def spread_threshold(pnl_event):
     i = 0
     while i < len(pnl_event['dataframe']) - pnl_event['forecastHorizon']:
 
-        if np.abs(forecast_diff[i]) > pnl_event['threshold']:
+        if np.abs(forecast_diff[i]) > pnl_event['threshold'] and ((forecast_diff[i+pnl_event['forecastHorizon']]>0 and pnl_event['dataframe']['MA_diff_50'][i]>1) or (forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i]<=1)):
 
-            if forecast_diff[i+pnl_event['forecastHorizon']] > 0:
+            if forecast_diff[i+pnl_event['forecastHorizon']]>0 and pnl_event['dataframe']['MA_diff_50'][i]>1:
                 for j in range(0,pnl_event['forecastHorizon']):
                     cachePnL['pnl'].append(close_diff[i + j - pnl_event['forecastHorizon']])
 
-            if forecast_diff[i+pnl_event['forecastHorizon']] <= 0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i]<=1:
                 for j in range(0,pnl_event['forecastHorizon']):
                     cachePnL['pnl'].append(-close_diff[i + j - pnl_event['forecastHorizon']])
 
@@ -36,20 +37,21 @@ def spread_threshold(pnl_event):
         i+=pnl_event['forecastHorizon']
 
     cachePnL['asofdate'] = pnl_event['dataframe']['asofdate'][pnl_event['forecastHorizon']:].to_list()
+    cachePnL['strategy'] = [pnl_event['strategy']]*len(cachePnL['asofdate'])
 
-    print(len(cachePnL['pnl']))
     print(len(cachePnL['asofdate']))
+    print(len(cachePnL['strategy']))
 
-    pd.DataFrame(cachePnL).to_csv(r'pnl.csv')
+    pd.DataFrame(cachePnL).to_csv(r'pnl_test.csv')
 
 
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\commodities\corn\forecasts_corn_(1, 0)_True_5.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\commodities\corn\arma_ma\unadjusted\forecasts_corn_(1, 0)_True_5.csv',
     'threshold':0.01,
     'reinvest':True,
-    'strategy':'arma_threshold',
+    'strategy':'arma_threshold_ma',
 }
 
 spread_threshold(pnl_event)

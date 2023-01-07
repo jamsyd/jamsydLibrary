@@ -38,6 +38,12 @@ class train_arma:
             self.column:[],
             'forecastday':[],
             'product_name':[],
+            'MA_20':[],
+            'MA_50':[],
+            'MA_200':[],
+            'MA_diff_20':[],
+            'MA_diff_50':[],
+            'MA_diff_200':[],
 
         }
 
@@ -128,6 +134,15 @@ class train_arma:
             cacheForecasts[self.column]     = np.array(self.dataframe[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])])
             cacheForecasts['asofdate']      = np.array(self.dataframe[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])].index)
             cacheForecasts['product_name']  = np.array([self.product]*int(len(cacheForecasts['pointForecast'])))
+
+            cacheForecasts['MA_20']          = self.dataframe[self.column].rolling(20).mean()[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_50']          = self.dataframe[self.column].rolling(50).mean()[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_200']         = self.dataframe[self.column].rolling(200).mean()[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+
+            cacheForecasts['MA_diff_20']          = self.dataframe[self.column].rolling(20).mean().diff(1)[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_diff_50']          = self.dataframe[self.column].rolling(50).mean().diff(1)[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_diff_200']         = self.dataframe[self.column].rolling(200).mean().diff(1)[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+
             print(len(cacheForecasts['pointForecast']))
             print(len(cacheForecasts['forecastday']))
             print(len(cacheForecasts[self.column]))
@@ -197,6 +212,14 @@ class train_arma:
             cacheForecasts[self.column]     = np.array(self.dataframe[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])])
             cacheForecasts['asofdate']      = np.array(self.dataframe[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])].index)
 
+            cacheForecasts['MA_20']          = self.dataframe[self.column].rolling(20).mean()[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_50']          = self.dataframe[self.column].rolling(50).mean()[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_200']         = self.dataframe[self.column].rolling(200).mean()[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+
+            cacheForecasts['MA_diff_20']          = self.dataframe[self.column].rolling(20).mean().diff(1)[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_diff_50']          = self.dataframe[self.column].rolling(50).mean().diff(1)[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+            cacheForecasts['MA_diff_200']         = self.dataframe[self.column].rolling(200).mean().diff(1)[self.column][1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
+
             if self.b_adjust:
                 pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}_{self.b_adjust}.csv')
                 pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}_{self.b_adjust}.csv')
@@ -206,11 +229,11 @@ class train_arma:
 
 arma_model_event = {
 
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\commodities\corn\CBOT_DL_ZC1!, 1D b_adjust.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\commodities\soft_commodities\corn\CBOT_DL_ZC1!, 1D.csv',
     'forecastHorizon':5,
     'trainDFLength':252,
     'order':(1,0),
-    'num_models':5000,
+    'num_models':13000,
     'diff':True,
     'product':'corn',
     'column':'close',
