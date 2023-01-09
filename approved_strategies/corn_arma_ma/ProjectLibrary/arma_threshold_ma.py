@@ -48,7 +48,7 @@ def spread_threshold(pnl_event):
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\Output\arma\commodities\corn\arma_ma\unadjusted\forecasts_corn_(1, 0)_True_5.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\approved_strategies\corn_arma_ma\output\arma_(3,3)\forecasts_corn_(3, 3)_True_5.csv',
     'threshold':0.01,
     'reinvest':True,
     'strategy':'arma_threshold_ma',
