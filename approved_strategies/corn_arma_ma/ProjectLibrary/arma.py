@@ -227,20 +227,20 @@ class train_arma:
                 pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')
                 pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')           
 
-arma_model_event = {
+# arma_model_event = {
 
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\approved_strategies\corn_arma_ma\data\CBOT_DL_ZC1!, 1D.csv',
-    'forecastHorizon':5,
-    'trainDFLength':252,
-    'order':(3,3),
-    'num_models':13000,
-    'diff':True,
-    'product':'corn',
-    'column':'close',
-    'b_adjust':True,
+#     'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\approved_strategies\corn_arma_ma\data\CBOT_DL_ZC1!, 1D.csv',
+#     'forecastHorizon':5,
+#     'trainDFLength':252,
+#     'order':(3,3),
+#     'num_models':13000,
+#     'diff':True,
+#     'product':'corn',
+#     'column':'close',
+#     'b_adjust':True,
 
-}
+# }
 
-model = train_arma(arma_model_event)
+# model = train_arma(arma_model_event)
 
-model.arma_model()
+# model.arma_model()
