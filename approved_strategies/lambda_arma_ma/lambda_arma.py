@@ -30,6 +30,8 @@ cacheDatesArmaLambda = {
 
 }
 
+# def retrieve_dates(cacheDatesArmaLambdaEvent):
+
 i = 0
 while i < single_arma_event['num_models']:
 
@@ -39,6 +41,10 @@ while i < single_arma_event['num_models']:
     i+=single_arma_event['forecastHorizon']
 
 arma_dates = pd.DataFrame(cacheDatesArmaLambda)
+
+arma_dates.to_csv(r'arma_dates.csv')
+
+    # return arma_dates
 
 
 #############################################################################################################
@@ -58,14 +64,13 @@ def lambda_event(arma_lambda_event):
     fcast = res.forecast(self.forecastHorizon)
 
 
-    
+diff = np.log(arma_lambda_event['dataframe']).diff(1)
+
+i = 0
 while i < len(arma_dates):
 
-    print(arma_df['close'][arma_df['time'] > date])
-mod = ARMA(diff[i:self.trainDFLength+i], order=(2,2))
-
-
-
+    print(arma_df['close'][(arma_df['time'] > arma_dates['start_date'][i]) and (arma_df['time'] > arma_dates['start_date'][i])])
+    mod = ARMA(diff['close'], order=(2,2))
 
 
 

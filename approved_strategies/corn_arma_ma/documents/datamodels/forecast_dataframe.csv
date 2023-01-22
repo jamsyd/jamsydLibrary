@@ -1,0 +1,16 @@
+﻿Tablename: forecasts_<productname>_<arma_order>_<diff>_<forecastHorizon>_<trainDFLength>_<num_models>.csv,,,,,
+,,,,,
+,,,,,
+Data Types,,,,,
+pointForecast,forecastday,close,asofdate,product_name,MA_50
+float,int,float,datetime,string,float
+,,,,,
+Column Description,,,,,
+,,,,,
+pointForecast,This is the point forecast of the ,,,,
+forecastday,Number of l out of sample forecasts (days from forecast origin).,,,,
+close,The market observed prices for each asofdate.,,,,
+asofdate,The date we generate predictions for. ,,,,
+product_name,The name of the product we are modelling. ,,,,
+MA_50,Simple moving average of the close. ,,,,
+MA_diff_50,1 day difference of MA_50 for each asofdate. ,,,,

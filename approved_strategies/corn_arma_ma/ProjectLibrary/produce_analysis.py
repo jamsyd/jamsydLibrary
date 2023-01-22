@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 
 from scipy.stats import skew, kurtosis
 
-def analysis_frames():
+def analysis_frames(analysis_event):
 
     # Reading in Data Fames
-    forecast_df = pd.read_csv(r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_corn_(3, 3)_True_5.csv',parse_dates=True,index_col='asofdate')
-    pnl_df      = pd.read_csv(r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\pnl_test.csv',parse_dates=True,index_col='asofdate')
-    metadata    = pd.read_csv(r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\metadata_corn_(3, 3)_True_5.csv',parse_dates=True,index_col='asofdate')
+    forecast_df = pd.read_csv(analysis_event['forecast_df'],parse_dates=True,index_col='asofdate')
+    pnl_df      = pd.read_csv(analysis_event['pnl_df'],parse_dates=True,index_col='asofdate')
+    metadata    = pd.read_csv(analysis_event['metadata_df'],parse_dates=True,index_col='asofdate')
 
     def hitrate(pnl):
 
@@ -26,7 +26,6 @@ def analysis_frames():
         return up / (up + down)
 
 
-
     def relativepnl(pnl):
 
         up = 0
@@ -37,6 +36,7 @@ def analysis_frames():
                 down+=np.abs(p)
             if p >= 0:
                 up+=np.abs(p)
+                
         return up / (down)
 
 
@@ -63,7 +63,6 @@ def analysis_frames():
 
     # Metadata Summary 
     metadata.mean(axis=0).to_csv(f"""metadatasummary_{metadata['product_name'][0]}_arma_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
-
 
     # List all positions
     positions.to_csv(f"""positions_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")

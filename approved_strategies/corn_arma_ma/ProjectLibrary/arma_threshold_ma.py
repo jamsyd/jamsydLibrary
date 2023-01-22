@@ -9,49 +9,53 @@ def spread_threshold(pnl_event):
         'asofdate':[],
         'pnl':[],
         'strategy':[],
+        'positionType':[],
 
     }
 
+    # name of string to save output
+    cache_pnl_str = pnl_event['dataframe'].replace("forecasts","pnl_armaspreadthreshold")
+    cache_trades_str = pnl_event['dataframe'].replace("forecasts","tradelevelpnl_armaspreadthreshold")
+
+
+    # reading in dataframe
     pnl_event['dataframe'] = pd.read_csv(pnl_event['dataframe'],parse_dates=True)
 
+    # calculating the difference
     close_diff    = pnl_event['dataframe']['close'].diff(pnl_event['forecastHorizon'])
+
+
     forecast_diff = pnl_event['dataframe']['pointForecast'].diff(pnl_event['forecastHorizon'])
 
     i = 0
     while i < len(pnl_event['dataframe']) - pnl_event['forecastHorizon']:
+        if np.abs(forecast_diff[i+pnl_event['forecastHorizon']]) > pnl_event['threshold'] and ((forecast_diff[i+pnl_event['forecastHorizon']] > 0 and pnl_event['dataframe']['MA_diff_50'][i] > 0) or (forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i] <= 0)):
 
-        if np.abs(forecast_diff[i]) > pnl_event['threshold'] and ((forecast_diff[i+pnl_event['forecastHorizon']]>0 and pnl_event['dataframe']['MA_diff_50'][i]>0) or (forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i]<=0)):
-
-            if forecast_diff[i+pnl_event['forecastHorizon']]>0 and pnl_event['dataframe']['MA_diff_50'][i]>0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] > 0 and pnl_event['dataframe']['MA_diff_50'][i] > 0:
                 for j in range(0,pnl_event['forecastHorizon']):
-                    cachePnL['pnl'].append(close_diff[i + j - pnl_event['forecastHorizon']])
+                    cachePnL['pnl'].append(close_diff[i + j])
+                    cachePnL['positionType'].append('long')
 
-            if forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i]<=0:
+            if forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i] <= 0:
                 for j in range(0,pnl_event['forecastHorizon']):
-                    cachePnL['pnl'].append(-close_diff[i + j - pnl_event['forecastHorizon']])
+                    cachePnL['pnl'].append(-close_diff[i + j])
+                    cachePnL['positionType'].append('short')
 
         else:
+
             for j in range(0,pnl_event['forecastHorizon']):
                 cachePnL['pnl'].append(0)
-
+                cachePnL['positionType'].append('no_position')
+    
         i+=pnl_event['forecastHorizon']
 
     cachePnL['asofdate'] = pnl_event['dataframe']['asofdate'][pnl_event['forecastHorizon']:].to_list()
     cachePnL['strategy'] = [pnl_event['strategy']]*len(cachePnL['asofdate'])
 
-    print(len(cachePnL['asofdate']))
-    print(len(cachePnL['strategy']))
+    # saving dataframes
+    pnl_df   = pd.DataFrame(cachePnL)
+    trade_df = pnl_df[::pnl_event['forecastHorizon']]
 
-    pd.DataFrame(cachePnL).to_csv(r'pnl_test.csv')
-
-
-# pnl_event = {
-
-#     'forecastHorizon':5,
-#     'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\approved_strategies\corn_arma_ma\output\arma_(3,3)\forecasts_corn_(3, 3)_True_5.csv',
-#     'threshold':0.01,
-#     'reinvest':True,
-#     'strategy':'arma_threshold_ma',
-# }
-
-# spread_threshold(pnl_event)
+    # cache to csv
+    pnl_df.to_csv(cache_pnl_str)
+    trade_df.to_csv(cache_trades_str)
