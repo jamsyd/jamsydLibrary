@@ -1,1 +1,0 @@
-https://api.ers.usda.gov/data/arms/state?api_key=NILvLX2olvuGNhMDcOWexw8Irdpu8TLdzqZZMi0e
