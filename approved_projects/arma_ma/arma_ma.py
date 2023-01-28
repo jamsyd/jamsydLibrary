@@ -11,13 +11,13 @@ from ProjectLibrary.produce_analysis import analysis_frames
 
 arma_model_event = {
 
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\approved_strategies\corn_arma_ma\data\CBOT_DL_ZC1!, 1D.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\commodities\metals\copper\COMEX_DL_HG1!, 1D.csv',
     'forecastHorizon':5,
     'trainDFLength':252,
-    'order':(2,2),
-    'num_models':10000,
+    'order':(1,1),
+    'num_models':5800,
     'diff':True,
-    'product':'corn',
+    'product':'copper',
     'column':'close',
     'b_adjust':True,
 
@@ -27,7 +27,7 @@ arma_model_event = {
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_corn_(2, 2)_True_5.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_copper_(1, 1)_True_5.csv',
     'threshold':0.01,
     'reinvest':True,
     'strategy':'arma_threshold_ma',
@@ -35,9 +35,9 @@ pnl_event = {
 
 analysis_event = {
 
-    'forecast_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_corn_(2, 2)_True_5.csv',
-    'pnl_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\pnl_armaspreadthreshold_corn_(2, 2)_True_5.csv',
-    'metadata_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\metadata_corn_(2, 2)_True_5.csv',
+    'forecast_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_copper_(1, 1)_True_5.csv',
+    'pnl_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\pnl_armaspreadthreshold_copper_(1, 1)_True_5.csv',
+    'metadata_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\metadata_copper_(1, 1)_True_5.csv',
 
 }
 

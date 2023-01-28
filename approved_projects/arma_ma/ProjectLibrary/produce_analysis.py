@@ -40,17 +40,18 @@ def analysis_frames(analysis_event):
         return up / (down)
 
 
-
+    ##############################################################################################################
     # Retrieve dataframe of positions
     merge_df = pnl_df.merge(forecast_df, left_on='asofdate', right_on='asofdate')
     positions = merge_df[(merge_df['forecastday'] == 5)][['pnl','pointForecast','forecastday','product_name']]
+    ##############################################################################################################
 
     # Positions Summary
     positions = positions[positions['pnl']!=0]
     performance_dict = {
 
         'No._Trades':[len(positions['pnl'])],
-        'relative_Pnl':[relativepnl(positions['pnl'])],
+        # 'relative_Pnl':[relativepnl(positions['pnl'])],
         'Hit_Rate':[hitrate(positions['pnl'])],
         'Minimum':[np.min(positions['pnl'])],
         'Maximum':[np.max(positions['pnl'])],
@@ -68,4 +69,4 @@ def analysis_frames(analysis_event):
     positions.to_csv(f"""positions_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
 
     # Position Summary CSV
-    pd.DataFrame(performance_dict).to_csv(f"""tradeperformance_corn_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
+    pd.DataFrame(performance_dict).to_csv(f"""tradeperformance_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
