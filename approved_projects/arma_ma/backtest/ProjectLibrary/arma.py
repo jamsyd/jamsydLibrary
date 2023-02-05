@@ -130,7 +130,7 @@ class train_arma:
             cacheForecasts['product_name']  = np.array([self.product]*int(len(cacheForecasts['pointForecast'])))
             cacheForecasts['MA_50']         = self.dataframe[self.column].rolling(50).mean()[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
             cacheForecasts['MA_diff_50']    = self.dataframe[self.column].rolling(50).mean().diff(1)[1+self.trainDFLength:1+self.trainDFLength+len(cacheForecasts['pointForecast'])]
-   
+
             
             pd.DataFrame(cacheForecasts).to_csv(f'forecasts_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')
             pd.DataFrame(cacheMetadata).to_csv(f'metadata_{self.product}_{self.order}_{self.diff}_{self.forecastHorizon}.csv')
