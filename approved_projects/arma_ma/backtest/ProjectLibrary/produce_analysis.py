@@ -46,12 +46,14 @@ def analysis_frames(analysis_event):
     
     # Retrieve dataframe of positions
     merge_df = pnl_df.merge(forecast_df, left_on='asofdate', right_on='asofdate')
-    positions = merge_df[(merge_df['forecastday'] == 5)][['pnl','pointForecast','forecastday','product_name']]
+    # print(merge_df)
+    # print(merge_df.columns)
+    # positions = merge_df[(merge_df['forecastday_x'] == 5)][['pnl','pointForecast','forecastday','product_name']]
 
     ##############################################################################################################
 
     # Positions Summary
-    positions = positions[positions['pnl']!=0]
+    positions = pnl_df[pnl_df['forecastday']==5]
 
     performance_dict = {
 
@@ -68,10 +70,10 @@ def analysis_frames(analysis_event):
     }
 
     # Metadata Summary 
-    metadata.mean(axis=0).to_csv(os.path.join(r'approved_projects\arma_ma\backtest\output\stocks',f"""metadatasummary_{metadata['product_name'][0]}_arma_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv"""))
+    metadata.mean(axis=0).to_csv(os.path.join(f"""metadatasummary_{metadata['product_name'][0]}_arma_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv"""))
 
     # List all positions
-    # positions.to_csv(f"""positions_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
+    positions.to_csv(f"""positions_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
 
     # # Position Summary CSV
-    # pd.DataFrame(performance_dict).to_csv(f"""tradeperformance_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
+    pd.DataFrame(performance_dict).to_csv(f"""tradeperformance_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
