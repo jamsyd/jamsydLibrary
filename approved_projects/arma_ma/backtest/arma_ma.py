@@ -15,13 +15,13 @@ from ProjectLibrary.produce_analysis import analysis_frames
 
 arma_model_event = {
 
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\volatility\CBOE_CIV, 1D.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\stocks\BATS_CORN, 1D.csv',
     'forecastHorizon':5,
     'trainDFLength':252,
-    'order':(1,0),
+    'order':(1,1),
     'num_models':1500,
     'diff':True,
-    'product':'civ',
+    'product':'CORN',
     'column':'close',
     'b_adjust':True,
 
@@ -31,7 +31,7 @@ arma_model_event = {
 pnl_event = {
 
     'forecastHorizon':5,
-    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_civ_(1, 0)_True_5.csv',
+    'dataframe':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_CORN_(1, 1)_True_5.csv',
     'threshold':0.01,
     'reinvest':True,
     'strategy':'arma_threshold_ma',
@@ -39,9 +39,9 @@ pnl_event = {
 
 analysis_event = {
 
-    'forecast_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_civ_(1, 0)_True_5.csv',
-    'pnl_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_civ_(1, 0)_True_5.csv',
-    'metadata_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\metadata_civ_(1, 0)_True_5.csv',
+    'forecast_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_CORN_(1, 1)_True_5.csv',
+    'pnl_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\forecasts_CORN_(1, 1)_True_5.csv',
+    'metadata_df':r'C:\Users\James Stanley\Documents\GitHub\backtest_utilities\metadata_CORN_(1, 1)_True_5.csv',
 
 }
 

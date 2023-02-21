@@ -76,4 +76,4 @@ def analysis_frames(analysis_event):
     positions.to_csv(f"""positions_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
 
     # # Position Summary CSV
-    pd.DataFrame(performance_dict).to_csv(f"""tradeperformance_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")
+    # pd.DataFrame(performance_dict).to_csv(f"""tradeperformance_{metadata['product_name'][0]}_arma_ma50_({metadata['order_p'][0]},{metadata['order_q'][0]}).csv""")

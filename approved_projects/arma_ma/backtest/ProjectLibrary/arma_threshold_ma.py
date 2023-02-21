@@ -22,10 +22,9 @@ def spread_threshold(pnl_event):
     pnl_event['dataframe'] = pd.read_csv(pnl_event['dataframe'],parse_dates=True)
 
     # calculating the difference
-    close_diff    = pnl_event['dataframe']['close'].diff(pnl_event['forecastHorizon'])
+    close_diff    = pnl_event['dataframe']['close'].diff(1).fillna(0) #.diff(pnl_event['forecastHorizon'])
 
-
-    forecast_diff = pnl_event['dataframe']['pointForecast'].diff(pnl_event['forecastHorizon'])
+    forecast_diff = pnl_event['dataframe']['pointForecast'].diff(1)
 
     i = 0
     while i < len(pnl_event['dataframe']) - pnl_event['forecastHorizon']:
@@ -54,8 +53,12 @@ def spread_threshold(pnl_event):
 
     # saving dataframes
     pnl_df   = pd.DataFrame(cachePnL)
-    trade_df = pnl_df[::pnl_event['forecastHorizon']]
 
     # cache to csv
     pnl_df.to_csv(cache_pnl_str)
-    trade_df.to_csv(cache_trades_str)
+
+    pnl_df['pnl'] = pnl_df['pnl'].cumsum().diff(pnl_event['forecastHorizon'])
+
+    trade_df = pnl_df[pnl_df['forecastday'] == 5]
+
+    # trade_df.to_csv(cache_trades_str)
