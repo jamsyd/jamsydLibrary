@@ -1,0 +1,32 @@
+CORN:
+  dataframe: C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\stocks\BATS_CORN, 1D.csv
+  forecastHorizon: 5 
+  trainDFLength: 252
+  num_models: 10
+  diff: True
+  product: CORN
+  Column: resid
+  b_adjust: True
+  order: 1,1
+
+CANE:
+  dataframe: C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\stocks\BATS_CANE, 1D.csv
+  forecastHorizon: 5 
+  trainDFLength: 252
+  num_models: 10
+  diff: True
+  product: CANE
+  Column: resid
+  b_adjust: True
+  order: 1,1
+
+SOYB:
+  dataframe: C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\daily\stocks\BATS_SOYB, 1D.csv
+  forecastHorizon: 5 
+  trainDFLength: 252
+  num_models: 10
+  diff: True
+  product: SOYB
+  Column: resid
+  b_adjust: True
+  order: 1,1
