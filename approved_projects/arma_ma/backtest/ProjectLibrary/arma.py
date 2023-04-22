@@ -41,7 +41,6 @@ class train_arma:
             'MA_50':[],
             'MA_diff_50':[],
 
-
         }
 
         cacheMetadata = {
