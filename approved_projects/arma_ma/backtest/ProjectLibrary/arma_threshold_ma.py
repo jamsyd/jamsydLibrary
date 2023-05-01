@@ -10,55 +10,46 @@ def spread_threshold(pnl_event):
         'pnl':[],
         'strategy':[],
         'positionType':[],
-
+        'position_identifier':[]
     }
-
-    # name of string to save output
-    cache_pnl_str = pnl_event['dataframe'].replace("forecasts","pnl_armaspreadthreshold")
-    cache_trades_str = pnl_event['dataframe'].replace("forecasts","tradelevelpnl_armaspreadthreshold")
-
 
     # reading in dataframe
     pnl_event['dataframe'] = pd.read_csv(pnl_event['dataframe'],parse_dates=True)
 
-    # calculating the difference
-    close_diff    = pnl_event['dataframe']['close'].diff(1).fillna(0) #.diff(pnl_event['forecastHorizon'])
+    pnl_event['dataframe']['pnl']          = pnl_event['dataframe']['close'].diff(1)
+    pnl_event['dataframe']['forecast_pnl'] = pnl_event['dataframe']['pointForecast'].diff(1)
 
-    forecast_diff = pnl_event['dataframe']['pointForecast'].diff(1)
+    pnl_event['dataframe'] = pnl_event['dataframe'].iloc[pnl_event['forecastHorizon']-1:].reset_index()
 
     i = 0
     while i < len(pnl_event['dataframe']) - pnl_event['forecastHorizon']:
-        if np.abs(forecast_diff[i+pnl_event['forecastHorizon']]) > pnl_event['threshold'] and ((forecast_diff[i+pnl_event['forecastHorizon']] > 0 and pnl_event['dataframe']['MA_diff_50'][i] > 0) or (forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i] <= 0)):
 
-            if forecast_diff[i+pnl_event['forecastHorizon']] > 0 and pnl_event['dataframe']['MA_diff_50'][i] > 0:
+        fc_diff = pnl_event['dataframe']['forecast_pnl'].iloc[i:i+pnl_event['forecastHorizon']].sum()
+        ma_diff  = pnl_event['dataframe']['MA_diff_50'][i]
+    
+        if np.abs(fc_diff) > pnl_event['threshold'] and ((fc_diff > 0 and ma_diff > 0) or (fc_diff <= 0 and ma_diff <= 0)):
+
+            if fc_diff > 0 and ma_diff > 0:
                 for j in range(0,pnl_event['forecastHorizon']):
-                    cachePnL['pnl'].append(close_diff[i + j])
+                    cachePnL['pnl'].append(pnl_event['dataframe']['pnl'][i + j])
                     cachePnL['positionType'].append('long')
-
-            if forecast_diff[i+pnl_event['forecastHorizon']] <= 0 and pnl_event['dataframe']['MA_diff_50'][i] <= 0:
+                    cachePnL['position_identifier'].append(f"""{pnl_event['product_name']}_long_{i}""")
+            if fc_diff <= 0 and ma_diff <= 0:
                 for j in range(0,pnl_event['forecastHorizon']):
-                    cachePnL['pnl'].append(-close_diff[i + j])
+                    cachePnL['pnl'].append(-pnl_event['dataframe']['pnl'][i + j])
                     cachePnL['positionType'].append('short')
-
+                    cachePnL['position_identifier'].append(f"""{pnl_event['product_name']}_short_{i}""")
         else:
 
             for j in range(0,pnl_event['forecastHorizon']):
                 cachePnL['pnl'].append(0)
                 cachePnL['positionType'].append('no_position')
-    
+                cachePnL['position_identifier'].append(f"""{pnl_event['product_name']}_no_position_{i}""")    
+
+
         i+=pnl_event['forecastHorizon']
+    cachePnL['asofdate'] = pnl_event['dataframe']['asofdate'][:len(cachePnL['pnl'])].to_list()
+    cachePnL['strategy'] = [pnl_event['strategy']]*len(cachePnL['pnl'])
 
-    cachePnL['asofdate'] = pnl_event['dataframe']['asofdate'][pnl_event['forecastHorizon']:].to_list()
-    cachePnL['strategy'] = [pnl_event['strategy']]*len(cachePnL['asofdate'])
-
-    # saving dataframes
-    pnl_df   = pd.DataFrame(cachePnL)
-
-    # cache to csv
-    pnl_df.to_csv(cache_pnl_str)
-
-    pnl_df['pnl'] = pnl_df['pnl'].cumsum().diff(pnl_event['forecastHorizon'])
-
-    trade_df = pnl_df[pnl_df['forecastday'] == 5]
-
-    # trade_df.to_csv(cache_trades_str)
+    # # saving dataframes   
+    pd.DataFrame(cachePnL).to_csv(f"""{pnl_event['product_name']}_pnl.csv""")
