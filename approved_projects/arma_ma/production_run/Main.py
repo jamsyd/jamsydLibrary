@@ -1,3 +1,11 @@
+"""
+
+    Date: 29/01/2023
+    Author: James Stanley
+    Description: Main file for production run of arma_ma model.
+
+"""
+
 import os
 import sys
 
