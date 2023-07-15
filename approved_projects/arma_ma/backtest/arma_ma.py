@@ -13,15 +13,15 @@ from ProjectLibrary.arma import train_arma
 from ProjectLibrary.arma_threshold_ma import spread_threshold
 from ProjectLibrary.produce_analysis import analysis_frames
 
-product = "SPY"
+product = "VIX"
 
 arma_model_event = {
 
     'dataframe':r"C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\market_data\daily\stocks\BATS_SPY, 1D.csv",
     'forecastHorizon':5,
     'trainDFLength':252,
-    'order':(1,0,1),
-    'num_models':7200,
+    'order':(1,0,0),
+    'num_models':8100,
     'diff':True,
     'product':product,
     'column':'close',
@@ -38,7 +38,7 @@ pnl_event = {
     'product_name':product,
     'forecastHorizon':5,
     'dataframe':f"""{product}_forecasts_{str(arma_model_event['order'])}.csv""",
-    'threshold':0.01,
+    'threshold':0.00,
     'reinvest':True,
     'strategy':'arma_ma',
 }
