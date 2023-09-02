@@ -19,7 +19,6 @@ class train_arma:
         self.diff            = event['diff']
         self.product         = event['product']
         self.column          = event['column']
-        self.b_adjust        = event['b_adjust']
 
         # number of mdoels to be trained
         self.num_models      = event['num_models']
