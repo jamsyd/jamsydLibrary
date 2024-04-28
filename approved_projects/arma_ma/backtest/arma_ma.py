@@ -17,11 +17,11 @@ product = "VIX"
 
 arma_model_event = {
 
-    'dataframe':r"C:\Users\James Stanley\Documents\GitHub\backtest_utilities\data\market_data\daily\stocks\BATS_SPY, 1D.csv",
+    'dataframe':r"C:\Users\James Stanley\Downloads\CME_DL_CSC1!, 1D.csv",
     'forecastHorizon':5,
     'trainDFLength':252,
     'order':(1,0,0),
-    'num_models':8100,
+    'num_models':810,
     'diff':True,
     'product':product,
     'column':'close',
